@@ -1,0 +1,73 @@
+# ─── iMessage Claude Bridge Configuration ─────────────────────────────────────
+# Copy this file to config.yaml and fill in your details.
+
+# Your phone number as it appears in iMessage (E.164 format or however macOS stores it).
+# Run this to find it:
+#   sqlite3 ~/Library/Messages/chat.db "SELECT DISTINCT chat_identifier FROM chat;"
+allowed_sender: "+1XXXXXXXXXX"
+
+# The chat_identifier for the self-chat to monitor (usually same as above).
+self_chat_id: "+1XXXXXXXXXX"
+
+# Polling interval in seconds (2-5 recommended)
+poll_interval: 3
+
+# Claude CLI settings
+claude:
+  timeout: 120        # seconds before killing a claude invocation
+  max_response_length: 16000  # truncate claude output beyond this (chars)
+
+# Rate limit — if exceeded the process exits (rather than throttle)
+rate_limits:
+  messages_per_minute: 10
+
+# Projects — directories Claude can operate in.
+# aliases: voice-friendly names for Siri dictation (fuzzy matched)
+# allowed_tools: passed directly to claude --allowedTools
+#   Common values: Read, Glob, Grep, LS, Edit, Write, MultiEdit, Bash
+#   MCP tools: mcp__servername__toolname (or mcp__servername__* for all tools)
+projects:
+  - name: my-project
+    path: /Users/you/Documents/my-project
+    aliases:
+      - my project
+      - project
+    allowed_tools:
+      - Read
+      - Glob
+      - Grep
+      - LS
+
+  # Example: project with edit access
+  # - name: my-website
+  #   path: /Users/you/Documents/my-website
+  #   aliases:
+  #     - website
+  #     - my site
+  #   allowed_tools:
+  #     - Read
+  #     - Glob
+  #     - Grep
+  #     - LS
+  #     - Edit
+  #     - Write
+
+  # Example: project with MCP server tools
+  # - name: obsidian-vault
+  #   path: /Users/you/Documents/obsidian
+  #   aliases:
+  #     - obsidian
+  #     - vault
+  #     - notes
+  #   allowed_tools:
+  #     - Read
+  #     - LS
+  #     - mcp__obsidian__search_notes
+  #     - mcp__obsidian__read_note
+  #     - mcp__obsidian__write_note
+
+# Default project on startup (must match a project name above)
+default_project: my-project
+
+# Max characters per iMessage chunk (long responses are split automatically)
+max_chunk_size: 4000
